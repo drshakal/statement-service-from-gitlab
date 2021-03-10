@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-       http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring.xsd">
-
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring.xsd">
+    <bean class="org.mycompany.processors.HelloProcessors" id="helloProcessors"/>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <dataFormats>
+            <xmljson id="xmljson-id"/>
+        </dataFormats>
+        <restConfiguration bindingMode="json" component="jetty"
+            host="0.0.0.0" port="8081"/>
+        <rest id="rest-id" path="/api/v1/">
+            <post id="postHello" outType="org.mycompany.models.Response"
+                type="org.mycompany.models.Request" uri="hello">
+                <to id="_to1" uri="direct:simple-route"/>
+            </post>
+        </rest>
         <route id="simple-route">
-            <from id="route-timer" uri="timer://foo?period=1000"/>
-            <setBody id="route-setBody"><simple>Hello World from camel-context.xml</simple></setBody>
-            <log id="route-log" message=">>> ${body}"/>
+            <from id="_from1" uri="direct:simple-route"/>
+            <log id="_log1" message="Inside simple-route"/>
+            <to id="_bean1" uri="helloProcessors"/>
         </route>
     </camelContext>
 </beans>

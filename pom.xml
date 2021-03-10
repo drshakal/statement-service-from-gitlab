@@ -8,10 +8,10 @@
   <name>Fabric8 :: Quickstarts :: Spring-Boot :: Camel XML</name>
   <description>Spring Boot example running a Camel route defined in XML</description>
   <properties>
-    <fuse.version>7.8.0.fuse-sb2-780038-redhat-00001</fuse.version>
+    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+    <fuse.version>7.8.0.fuse-sb2-780038-redhat-00001</fuse.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -36,6 +36,21 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-boot-starter</artifactId>
+      <version>2.23.2.fuse-780036-redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jetty9</artifactId>
+      <version>2.23.2.fuse-780036-redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jackson</artifactId>
+      <version>2.23.2.fuse-770010-redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xmljson</artifactId>
       <version>2.23.2.fuse-780036-redhat-00001</version>
     </dependency>
   </dependencies>

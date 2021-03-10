@@ -1,1 +1,4 @@
+org\mycompany\processors\HelloProcessors.class
+org\mycompany\models\Response.class
 org\mycompany\Application.class
+org\mycompany\models\Request.class
