@@ -1,5 +1,6 @@
 package in.co.dhdigital.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -8,8 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 
-public class TransactionDetail {
+public class TransactionDetail implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String accountNumber;
 	private double balance;

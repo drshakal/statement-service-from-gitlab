@@ -3,6 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring.xsd">
     <bean id = "accountDetailsProcessor" class= "in.co.dhdigital.processors.AccountDetailsProcessor" />
     <bean id = "accountDetailsAggretor" class="in.co.dhdigital.aggregators.AccountDetailsAggregator"/>
+    <bean id = "statementCacheProcessor" class= "in.co.dhdigital.processors.StatementCacheProcessor" />
+    <bean id = "statementGetCacheProcessor" class= "in.co.dhdigital.processors.StatementGetCacheProcessor" />
+    
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <dataFormats>
          <json id="convertAccountDetailsResponse" library="Jackson"
@@ -16,36 +19,51 @@
         <rest id="rest-id" path="/api/v1/statement">
             <get id="get-account-details"
                 outType="in.co.dhdigital.models.StatementServiceResponse" uri="/{accountnumber}">
-                <to id="_to1" uri="direct:get-account-details-route"/>
+                <to id="_to1" uri="direct:cache"/>
             </get>
         </rest>
+        
+        <route id = "cache">
+        	<from id = "from-cache" uri="direct:cache" />
+        	<process id = "process3" ref="statementGetCacheProcessor"/>
+        	
+        	 <choice >
+	        	  <when>
+	        	  	<simple>${header.found} != 'true'</simple>
+	        	  	<to uri="direct:get-account-details-route"/>
+	             </when>
+	             <otherwise>
+	             	<process id = "process2" ref="statementCacheProcessor"/>
+	             </otherwise>
+        	 </choice>
+        </route>
         <route id="get-account-details-route">
             <from id="_from1" uri="direct:get-account-details-route"/>
             <log id="_log1" message="Inside get-account-details-route"/>
             <log id="_log2" message="Headers: ${headers}"/>
-          
-                <toD id="_to2" uri="http://account-details-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in/api/v1/accountdetails/${headers.accountnumber}?bridgeEndpoint=true"/>
+ 			<doTry id="_doTry3">
+                <toD id="_to2" uri="http://{{urls.account-service}}/api/v1/accountdetails/${headers.accountnumber}?bridgeEndpoint=true"/>
                 <unmarshal id="_unmarshal1" >
                 	<custom ref="convertAccountDetailsResponse"  />
                 </unmarshal>
-              <!-- <process id = "process1" ref="accountDetailsProcessor"/>  -->
        			<enrich id="_enrich1" strategyRef="accountDetailsAggretor">
                 	<constant>direct:get-restart</constant>
             	</enrich>
             	<log id = "_log4" message="StatementServiceResponse: ${body} "/>
-<!--           	   <doTry id="_doTry3">
+            	<process id = "process1" ref="statementCacheProcessor"/>
+    	
                 <doCatch id="_doCatch3">
                     <exception>java.lang.Exception</exception>
                     <log id="_log3" message="Error while calling Transaction Service: ${body} "/>
                 </doCatch>
-            </doTry>  -->
+            </doTry> 
         </route>
         <route id ="get-restart">
         	<from id = "from2" uri="direct:get-restart"/>
         	<setBody >
         		<constant></constant>
         	</setBody>
-        	<toD id="to3" uri= "http://restart-service-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in/api/v1/restart?bridgeEndpoint=true"/>
+        	<toD id="to3" uri= "http://{{urls.restart-service}}/api/v1/restart?bridgeEndpoint=true"/>
         	  <unmarshal id="_unmarshal2" >
                 	<custom ref="convertRestartResponse"  />
                </unmarshal>

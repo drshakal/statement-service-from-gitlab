@@ -1,7 +1,13 @@
 package in.co.dhdigital.models;
 
-public class Restart {
+import java.io.Serializable;
 
+public class Restart implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String restartRecNo;
 	private double restartRecAmount;
 	

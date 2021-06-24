@@ -1,16 +1,28 @@
 package in.co.dhdigital.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class StatementServiceResponse {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
+@RedisHash("StatementServiceResponse")
+public class StatementServiceResponse implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
 	private AccountDetails accountDetails;
 	
 	private Restart restart;
-	private FaultType fault;
-	private boolean faultOccurred;
+
 	
-	private List<TransactionDetail> transactionDetail;
+	private List<TransactionDetail> transactionDetails;
+	private boolean faultOccurred;
+	private FaultType fault;
 
 	public AccountDetails getAccountDetails() {
 		return accountDetails;
@@ -32,11 +44,12 @@ public class StatementServiceResponse {
 		this.fault = fault;
 	}
 	
-	public List<TransactionDetail> getTransactionDetail() {
-		return transactionDetail;
+
+	public List<TransactionDetail> getTransactionDetails() {
+		return transactionDetails;
 	}
-	public void setTransactionDetail(List<TransactionDetail> transactionDetail) {
-		this.transactionDetail = transactionDetail;
+	public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
+		this.transactionDetails = transactionDetails;
 	}
 	public boolean isFaultOccurred() {
 		return faultOccurred;

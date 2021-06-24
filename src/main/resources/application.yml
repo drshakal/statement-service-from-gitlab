@@ -1,0 +1,15 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+spring:
+  cache:
+    type: redis
+  redis:    host: ${RHOST}
+    port: ${RPORT}
+    password: ${RPASSWORD}
+urls: 
+  account-service: "account-details-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in"
+  restart-service: "restart-service-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in"

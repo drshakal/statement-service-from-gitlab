@@ -1,10 +1,17 @@
 package in.co.dhdigital.models;
 
+import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
 
+public class AccountDetails   implements Serializable{
 
-public class AccountDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+	@Id
 	private String accountNumber;
 
 	private String accountTypeDescription;

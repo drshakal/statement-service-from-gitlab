@@ -60,7 +60,7 @@ public class AccountDetailsAggregator implements AggregationStrategy {
 		List<TransactionDetail> transactionDetails = accountDetailsResponse.getTransactionDetail();
 				
 		response.setAccountDetails(accountDetails);
-		response.setTransactionDetail(transactionDetails);
+		response.setTransactionDetails(transactionDetails);
 		response.setRestart(restartResponse.getRestart());
 		response.setFaultOccurred(false);
 		oldExchange.getIn().setBody(response);
