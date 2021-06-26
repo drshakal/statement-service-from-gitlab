@@ -11,5 +11,5 @@ spring:
     port: ${RPORT}
     password: ${RPASSWORD}
 urls: 
-  account-service: "account-details-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in"
-  restart-service: "restart-service-statement-service.apps.ocp4-cluster-002.int.dhdigital.co.in"
+  account-service: "account-details-statement-services.apps.ocp4-cluster-002.int.dhdigital.co.in"
+  restart-service: "restart-service-statement-services.apps.ocp4-cluster-002.int.dhdigital.co.in"
