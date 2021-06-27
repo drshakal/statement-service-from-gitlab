@@ -15,6 +15,7 @@
  */
 package in.co.dhdigital;
 
+import org.apache.camel.opentracing.starter.CamelOpenTracing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -26,6 +27,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ImportResource({"classpath:spring/camel-context.xml"})
 @EnableCaching
+@CamelOpenTracing
 public class Application {
 
     // must have a main method spring-boot can run
