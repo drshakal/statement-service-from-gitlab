@@ -11,5 +11,5 @@ spring:
     port: ${RPORT}
     password: ${RPASSWORD}
 urls: 
-  account-service: ${ACCOUNT-SERVICE}
-  restart-service: ${RESTART-SERVICE}
+  account-service: ${ACCOUNTSERVICE}
+  restart-service: ${RESTARTSERVICE}
