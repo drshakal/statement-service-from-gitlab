@@ -7,7 +7,7 @@
     <bean class="in.co.dhdigital.processors.StatementGetCacheProcessor" id="statementGetCacheProcessor"/>
        <bean class="in.co.dhdigital.routes.StatementRest" id="statementrest"/> -->
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-   <!--       <dataFormats>
+        <!--       <dataFormats>
             <json id="convertAccountDetailsResponse" library="Jackson"
                 objectMapper="com.camel.CustomObjectMapper" unmarshalTypeName="in.co.dhdigital.models.AccountDetailsResponse"/>
             <json id="convertRestartResponse" library="Jackson"

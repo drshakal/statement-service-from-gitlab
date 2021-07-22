@@ -4,12 +4,13 @@ management:
       exposure:
         include: "*"
         
-spring:
-  cache:
-    type: redis
-  redis:    host: ${RHOST}
-    port: ${RPORT}
-    password: ${RPASSWORD}
+#spring:
+#  cache:
+#    type: redis
+#  redis:#    host: ${RHOST}
+#    port: ${RPORT}
+#    password: ${RPASSWORD}
+
 urls: 
-  account-service: ${ACCOUNTSERVICE}
-  restart-service: ${RESTARTSERVICE}
+  account-service: account-details-statement-services.apps.ocp4-cluster-002.int.dhdigital.co.in
+  restart-service: restart-service-statement-services.apps.ocp4-cluster-002.int.dhdigital.co.in

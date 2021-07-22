@@ -14,8 +14,10 @@ import in.co.dhdigital.models.RestartResponse;
 //import in.co.dhdigital.processors.StatementCacheProcessor;
 //import in.co.dhdigital.processors.StatementGetCacheProcessor;
 import in.co.dhdigital.models.StatementServiceResponse;
-import in.co.dhdigital.processors.StatementCacheProcessor;
-import in.co.dhdigital.processors.StatementGetCacheProcessor;
+//import in.co.dhdigital.processors.StatementCacheProcessor;
+//import in.co.dhdigital.processors.StatementGetCacheProcessor;
+import in.co.dhdigital.processors.addHeaderProcessor;
+import in.co.dhdigital.processors.getHeaderProcessor;
 
 @Component
 public class StatementRoute extends RouteBuilder{
@@ -31,22 +33,59 @@ public class StatementRoute extends RouteBuilder{
 	      restConfiguration().component("jetty")
 	      .bindingMode(RestBindingMode.json)
 	      .dataFormatProperty("prettyPrint", "true")
-	      .port(8081);
+	      .port(8081).host("localhost");
 	      
 	      rest("api/v1/statement").consumes("application/json").produces("application/json")
 	      .get("/{accountnumber}").outType(StatementServiceResponse.class)
-	      .to("direct:cache");
+	      .to("direct:cache02");
 	      
-	      from("direct:cache")
-	     // .process("statementGetCacheProcessor")
-	      .bean(StatementGetCacheProcessor.class)
-	      .choice().when(simple("${header.found} != 'true'"))
+//	      from("direct:cache")
+//	     // .process("statementGetCacheProcessor")
+//	      .bean(StatementGetCacheProcessor.class)
+//	      .choice().when(simple("${header.found} != 'true'"))
+//	      .to("direct:get-account-details-route")
+//	      .otherwise()
+//	      //.process("statementCacheProcessor");
+//	      .bean(StatementCacheProcessor.class).endChoice();
+	      
+	      from("direct:cache02")
+	      .log("${headers}")
+	      .bean(getHeaderProcessor.class)
+	      .to("cache://customerInfoCache")
+	      .choice().when(simple("${header.CamelCacheElementWasFound} != 'true'"))
 	      .to("direct:get-account-details-route")
 	      .otherwise()
-	      //.process("statementCacheProcessor");
-	      .bean(StatementCacheProcessor.class).endChoice();
+	      .log("CACHE HIT").endChoice();
 	      
 	      
+//	      .choice().when(header(CacheConstants.CACHE_ELEMENT_WAS_FOUND).isNull()).
+//	        // If not found, get the payload and put it to cache
+//	        .to("cxf:bean:someHeavyweightOperation").
+//	        .setHeader(CacheConstants.CACHE_OPERATION, constant(CacheConstants.CACHE_OPERATION_ADD))
+//	        .setHeader(CacheConstants.CACHE_KEY, constant("Ralph_Waldo_Emerson"))
+//	        .to("cache://TestCache1")
+//	    .end()
+	      
+	      
+	      
+//	      <route id="cache_route">
+//          <from id="_form12" uri="direct:cachespace"/>
+//          <process id="_process2" ref="getHeaderProcessor"/>
+//          <log id="_log66" message="::::LOG BEFORE CACHECHECK::::**${headers}****************************************${body}"/>
+//          <to id="_to990" uri="cache://customerInfoCache"/>
+//          <log id="_log66" message="::::LOG ON CACHECHECK::::**${headers}****************************************${body}"/>
+//          <choice id="_choice1">
+//              <when id="_when1">
+//                  <simple>${header.CamelCacheElementWasFound} == true</simple>
+//                  <log id="_log66" message="::::SUCESSSSSSSSSSSSSSS::::**${headers}****************************************${body}"/>
+//                  <to id="_to2" uri="mock:out"/>
+//              </when>
+//              <otherwise id="_otherwise1">
+//                  <to id="_to1" uri="direct:getCustomerid"/>
+//              </otherwise>
+//          </choice>
+//          <to id="_to66" uri="mock:out"/>
+//      </route>
 	      
 		from("direct:get-account-details-route")
 	      .log("Inside get-account-details-route")
@@ -58,8 +97,10 @@ public class StatementRoute extends RouteBuilder{
 	      .unmarshal().json(JsonLibrary.Jackson , AccountDetailsResponse.class)
 	      .enrich("direct:get-restart", aggregationStrategy)
 	      .log("StatementServiceResponse: ${body}")
+	      .bean(addHeaderProcessor.class)
+	      .to("cache://customerInfoCache")
 	      //.process("statementCacheProcessor")
-	      .bean(StatementCacheProcessor.class)
+	      //.bean(StatementCacheProcessor.class)
 	      .doCatch(java.lang.Exception.class)
 	      .log("Error while calling Transaction Service: ${body}")
 	      .endDoTry().end();

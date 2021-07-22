@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("StatementServiceResponse")
+//@RedisHash("StatementServiceResponse")
 public class StatementServiceResponse implements Serializable {
 
 	/**
